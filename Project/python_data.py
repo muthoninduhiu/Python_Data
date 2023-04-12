@@ -49,3 +49,13 @@ def month_sales():
     # Return the highest and lowest months
     return highest_monthly_sale, lowest_monthly_sale
 
+
+# # Determine which customers made the most purchases and how much they spent in total
+def customer_purchase():
+    customer_data = df.groupby("Customer Name")['Total Sales'].sum()
+    customer_data.to_csv('customers.csv')
+    most_spendthrift_customer = customer_data.sort_values(ascending=False).head(1)
+    most_spendthrift_customer.to_csv('customer_data.csv')
+    # print(most_spendthrift_customer)
+    return most_spendthrift_customer, customer_data
+
