@@ -1,6 +1,5 @@
 import pandas as p
 from matplotlib import pyplot as plt
-from pandas import DataFrame
 
 # Use Pandas to read in the sales data from the CSV file provided in the
 # “student materials” folder on Slack (sales_dataset.csv)
@@ -24,7 +23,6 @@ def total_sales():
     sales_by_product.to_csv('product_total_sales.csv')
     # print(sales_by_product)
     return sales_by_product
-
 
 
 # Determine the average sale price for each product category
@@ -88,3 +86,24 @@ average_sale_price()
 month_sales()
 customer_purchase()
 merge_results()
+
+# Monthly sales trend
+monthly_sales = df.groupby("Month")['Total Sales'].sum().sort_values()
+monthly_sales.plot.line()
+plt.title('Monthly Sales Trend')
+plt.xlabel('Month')
+plt.ylabel('Total Sales')
+plt.show()
+
+# Read in the sales data from the CSV file provided in the “student materials” folder on Slack (sales_dataset.csv)
+df = p.read_csv('customers.csv')
+
+# Calculate the total sales for each customer
+sales_by_customer = df.groupby("Customer Name")["Total Sales"].sum().sort_values()
+# Create a horizontal bar chart to show the total sales by customer
+fig, ax = plt.subplots(figsize=(10, 10))
+ax.barh(sales_by_customer.index, sales_by_customer)
+ax.set_xlabel('Total Purchase')
+ax.set_ylabel('Customer Name')
+ax.set_title('Total Purchases by Customer')
+plt.show()
