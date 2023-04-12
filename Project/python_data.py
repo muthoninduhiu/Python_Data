@@ -1,3 +1,20 @@
+"""
+This program reads in sales data from a CSV file and performs various data analysis tasks, such as calculating total sales by product, determining the average sale price by product category, identifying the month with the highest and lowest sales, and determining the customers who made the most purchases and how much they spent in total. The program then merges the results of these analyses into a single DataFrame and writes it to a CSV file.
+
+The program also includes several functions to plot the results of these analyses using Matplotlib.
+
+Functions:
+- total_sales: calculates the total sales for each product
+- average_sale_price: determines the average sale price for each product category
+- month_sales: identifies the month with the highest and lowest sales
+- customer_purchase: determines which customers made the most purchases and how much they spent in total
+- merge_results: reads in the individual CSV files produced by the above functions, renames their columns, concatenates them into a single DataFrame, and writes it to a CSV file
+- plot_average_sale: plots the average sale price for each product category
+- show_products_sales: plots the total sales for each product
+- show_monthly_trend: plots the monthly sales trend
+- show_customer_purchase: plots the total sales for each customer
+
+"""
 import pandas as p
 from matplotlib import pyplot as plt
 
@@ -6,13 +23,13 @@ from matplotlib import pyplot as plt
 df = p.read_csv('sales_dataset.csv')
 
 # print(df.head())
-categories = df['Category']
-product = df['Product Name']
-quantity = df['Quantity Sold']
-month = df['Month']
-customer_name = df["Customer Name"]
-sales = df['Sale Price']
-
+# categories = df['Category']
+# product = df['Product Name']
+# quantity = df['Quantity Sold']
+# month = df['Month']
+# customer_name = df["Customer Name"]
+# sales = df['Sale Price']
+# define a new column with the total sales
 df["Total Sales"] = df["Quantity Sold"] * df["Sale Price"]
 
 
@@ -81,59 +98,73 @@ def merge_results():
     merged_data.to_csv('merged_data.csv', index=False)
 
 
-total_sales()
-average_sale_price()
-month_sales()
-customer_purchase()
-merge_results()
-# Average sale price for each product category
-avg_sale_price = average_sale_price().sort_values()
-avg_sale_price.plot.bar(x='Category', y='Total Sales')
-plt.title('Average Sale Price by Category')
-plt.xlabel('Category')
-plt.ylabel('Average Sale Price')
-plt.xticks(rotation=12)
-plt.show()
+def plot_average_sale():
+    # Average sale price for each product category
+    avg_sale_price = average_sale_price().sort_values()
+    avg_sale_price.plot.bar(x='Category', y='Total Sales')
+    plt.title('Average Sale Price by Category')
+    plt.xlabel('Category')
+    plt.ylabel('Average Sale Price')
+    plt.xticks(rotation=12)
+    plt.show()
 
-# Get the total sales by product
-total_product_price = total_sales().sort_values()
 
-# Create a horizontal bar plot
-plt.figure(figsize=(10, 6))
-ax = total_product_price.plot.barh(x='Product Name', y='Total Sales')
+def show_products_sales():
+    # Get the total sales by product
+    total_product_price = total_sales().sort_values()
 
-# Set title and axis labels
-plt.title('Product Sale Trend', fontsize=18)
-plt.xlabel('Total Sale', fontsize=14)
-plt.ylabel('Product', fontsize=14)
+    # Create a horizontal bar plot
+    plt.figure(figsize=(10, 6))
+    ax = total_product_price.plot.barh(x='Product Name', y='Total Sales')
 
-# Add grid lines
-ax.grid(axis='x')
+    # Set title and axis labels
+    plt.title('Product Sale Trend', fontsize=18)
+    plt.xlabel('Total Sale', fontsize=14)
+    plt.ylabel('Product', fontsize=14)
 
-# Increase font size of tick labels
-plt.xticks(fontsize=12)
-plt.yticks(fontsize=12)
+    # Add grid lines
+    ax.grid(axis='x')
 
-# Show the plot
-plt.show()
+    # Increase font size of tick labels
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=7)
 
-# Monthly sales trend
-monthly_sales = df.groupby("Month")['Total Sales'].sum().sort_values()
-monthly_sales.plot.line()
-plt.title('Monthly Sales Trend')
-plt.xlabel('Month')
-plt.ylabel('Total Sales')
-plt.show()
+    # Show the plot
+    plt.show()
 
-# Read in the sales data from the CSV file provided in the “student materials” folder on Slack (sales_dataset.csv)
-df = p.read_csv('customers.csv')
 
-# Calculate the total sales for each customer
-sales_by_customer = df.groupby("Customer Name")["Total Sales"].sum().sort_values()
-# Create a horizontal bar chart to show the total sales by customer
-fig, ax = plt.subplots(figsize=(10, 10))
-ax.barh(sales_by_customer.index, sales_by_customer)
-ax.set_xlabel('Total Purchase')
-ax.set_ylabel('Customer Name')
-ax.set_title('Total Purchases by Customer')
-plt.show()
+def show_monthly_trend():
+    # Monthly sales trend
+    monthly_sales = df.groupby("Month")['Total Sales'].sum().sort_values()
+    monthly_sales.plot.line()
+    plt.title('Monthly Sales Trend')
+    plt.xlabel('Month')
+    plt.ylabel('Total Sales')
+    plt.show()
+
+
+def show_customer_purchase():
+    # Read in the sales data from the CSV file provided in the “student materials” folder on Slack (sales_dataset.csv)
+    df = p.read_csv('customers.csv')
+
+    # Calculate the total sales for each customer
+    sales_by_customer = df.groupby("Customer Name")["Total Sales"].sum().sort_values()
+    # Create a horizontal bar chart to show the total sales by customer
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.barh(sales_by_customer.index, sales_by_customer)
+    ax.set_xlabel('Total Purchase')
+    ax.set_ylabel('Customer Name')
+    ax.set_title('Total Purchases by Customer')
+    plt.show()
+
+
+if __name__ == '__main__':
+    total_sales()
+    average_sale_price()
+    month_sales()
+    customer_purchase()
+    merge_results()
+    plot_average_sale()
+    show_products_sales()
+    show_monthly_trend()
+    show_customer_purchase()
