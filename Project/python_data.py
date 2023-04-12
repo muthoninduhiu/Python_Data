@@ -59,3 +59,32 @@ def customer_purchase():
     # print(most_spendthrift_customer)
     return most_spendthrift_customer, customer_data
 
+
+def merge_results():
+    # Read in the individual CSV files
+    sales_by_product = p.read_csv('product_total_sales.csv')
+    avg = p.read_csv('category_average_price.csv')
+    highest_monthly_sales = p.read_csv('highest_monthly_sale.csv')
+    lowest_monthly_sales = p.read_csv('lowest_monthly_sale.csv')
+    customer_data = p.read_csv('customer_data.csv')
+
+    # Rename the columns of each DataFrame
+    sales_by_product = sales_by_product.rename(columns={'Total Sales': 'Sales by Product'})
+    avg = avg.rename(columns={'Total Sales': 'Category Average Price'})
+    highest_monthly_sales = highest_monthly_sales.rename(columns={'Total Sales': 'Highest Monthly Sales'})
+    lowest_monthly_sales = lowest_monthly_sales.rename(columns={'Total Sales': 'Lowest Monthly Sales'})
+    customer_data = customer_data.rename(columns={'Total Sales': 'Highest Customer Sales'})
+
+    # Concatenate the DataFrames along a common axis (in this case, axis=1 since we want to join them horizontally)
+    merged_data = p.concat(
+        [sales_by_product, avg, highest_monthly_sales, lowest_monthly_sales, customer_data], axis=1)
+
+    # Write the merged data to a CSV file
+    merged_data.to_csv('merged_data.csv', index=False)
+
+
+total_sales()
+average_sale_price()
+month_sales()
+customer_purchase()
+merge_results()
