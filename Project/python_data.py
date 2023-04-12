@@ -37,3 +37,15 @@ def average_sale_price():
 
 
 # # Identify the month with the highest sales and the month with the lowest sales
+def month_sales():
+    monthly_sales = df.groupby("Month")['Total Sales'].sum()
+    # Sort the DataFrame by total sales in descending order to find the highest month
+    highest_monthly_sale = monthly_sales.sort_values(ascending=False).head(1).to_csv('highest_monthly_sale.csv')
+
+    # Sort the DataFrame by total sales in ascending order to find the lowest month
+    lowest_monthly_sale = monthly_sales.sort_values().head(1).to_csv('lowest_monthly_sale.csv')
+    # print(highest_monthly_sale)
+    # print(lowest_monthly_sale)
+    # Return the highest and lowest months
+    return highest_monthly_sale, lowest_monthly_sale
+
