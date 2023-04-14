@@ -1,5 +1,9 @@
 """
-This program reads in sales data from a CSV file and performs various data analysis tasks, such as calculating total sales by product, determining the average sale price by product category, identifying the month with the highest and lowest sales, and determining the customers who made the most purchases and how much they spent in total. The program then merges the results of these analyses into a single DataFrame and writes it to a CSV file.
+This program reads in sales data from a CSV file and performs various data analysis tasks,
+such as calculating total sales by product, determining the average sale price by product category,
+identifying the month with the highest and lowest sales, and determining the customers who made the
+ most purchases and how much they spent in total. The program then merges the results of these
+ analyses into a single DataFrame and writes it to a CSV file.
 
 The program also includes several functions to plot the results of these analyses using Matplotlib.
 
@@ -8,7 +12,8 @@ Functions:
 - average_sale_price: determines the average sale price for each product category
 - month_sales: identifies the month with the highest and lowest sales
 - customer_purchase: determines which customers made the most purchases and how much they spent in total
-- merge_results: reads in the individual CSV files produced by the above functions, renames their columns, concatenates them into a single DataFrame, and writes it to a CSV file
+- merge_results: reads in the individual CSV files produced by the above functions, renames their columns,
+ concatenates them into a single DataFrame, and writes it to a CSV file
 - plot_average_sale: plots the average sale price for each product category
 - show_products_sales: plots the total sales for each product
 - show_monthly_trend: plots the monthly sales trend
@@ -72,7 +77,7 @@ def customer_purchase():
     most_spendthrift_customer = customer_data.sort_values(ascending=False).head(1)
     most_spendthrift_customer.to_csv('customer_data.csv')
     # print(most_spendthrift_customer)
-    return most_spendthrift_customer, customer_data
+    return most_spendthrift_customer
 
 
 def merge_results():
@@ -145,17 +150,57 @@ def show_monthly_trend():
 
 def show_customer_purchase():
     # Read in the sales data from the CSV file provided in the “student materials” folder on Slack (sales_dataset.csv)
-    df = p.read_csv('customers.csv')
+    data_frame = p.read_csv('customers.csv')
 
     # Calculate the total sales for each customer
-    sales_by_customer = df.groupby("Customer Name")["Total Sales"].sum().sort_values()
+    sales_by_customer = data_frame.groupby("Customer Name")["Total Sales"].sum().sort_values()
     # Create a horizontal bar chart to show the total sales by customer
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.barh(sales_by_customer.index, sales_by_customer)
     ax.set_xlabel('Total Purchase')
     ax.set_ylabel('Customer Name')
     ax.set_title('Total Purchases by Customer')
+    ax.grid(axis='x')
     plt.show()
+
+# TODO:
+# def customer_product_relation():
+#     # Group by customer and product and calculate the total sales for each combination
+#     customer_product_data = df.groupby(["Customer Name", "Product Name"])["Total Sales"].sum()
+#
+#     # Reshape the data to have customers as rows and products as columns
+#     customer_product_pivot = customer_product_data.unstack(level=-1)
+#
+#     # Fill any missing values with 0
+#     customer_product_pivot = customer_product_pivot.fillna(0)
+#
+#     # Write the customer-product relation data to a CSV file
+#     customer_product_pivot.to_csv('customer_product_relation.csv')
+#     return customer_product_pivot
+#
+#
+# def plot_customer_product_relation():
+#     # Get the customer-product relation data
+#     customer_product_pivot = customer_product_relation()
+#
+#     # Create the plot
+#     fig, ax = plt.subplots()
+#     im = ax.imshow(customer_product_pivot, cmap='Blues')
+#
+#     # Set the axis labels and title
+#     ax.set_xlabel('Product Name')
+#     ax.set_ylabel('Customer Name')
+#     ax.set_title('Customer-Product Relation')
+#
+#     # Create a color bar
+#     cbar = ax.figure.colorbar(im, ax=ax)
+#
+#     # Rotate the x-axis labels to make them more readable
+#     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+#              rotation_mode="anchor")
+#
+#     # Show the plot
+#     plt.show()
 
 
 if __name__ == '__main__':
