@@ -20,6 +20,7 @@ Functions:
 - show_customer_purchase: plots the total sales for each customer
 
 """
+import numpy as np
 import pandas as p
 from matplotlib import pyplot as plt
 
@@ -42,7 +43,9 @@ df["Total Sales"] = df["Quantity Sold"] * df["Sale Price"]
 def total_sales():
     # multiply the two columns quantity sold and sales price to get total sale of each product
     sales_by_product = df.groupby("Product Name")["Total Sales"].sum()
+
     sales_by_product.to_csv('product_total_sales.csv')
+
     # print(sales_by_product)
     return sales_by_product
 
@@ -117,9 +120,8 @@ def plot_average_sale():
 def show_products_sales():
     # Get the total sales by product
     total_product_price = total_sales().sort_values()
-
     # Create a horizontal bar plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 10))
     ax = total_product_price.plot.barh(x='Product Name', y='Total Sales')
 
     # Set title and axis labels
@@ -133,6 +135,19 @@ def show_products_sales():
     # Increase font size of tick labels
     plt.xticks(fontsize=12)
     plt.yticks(fontsize=7)
+    # Add annotations for median, mean, and standard deviation
+    median_sale_price = np.median(df["Total Sales"])
+    mean_total_price = np.mean(df['Total Sales'])
+    std_sale_price = np.std(df["Total Sales"])
+
+    plt.axvline(x=median_sale_price, color='r', linestyle='--')
+    plt.text(median_sale_price - 500, -0.4, 'Median: $' + str(round(median_sale_price, 2)), color='r')
+
+    plt.axvline(x=mean_total_price, color='b', linestyle=':')
+    plt.text(mean_total_price + 12, -1.5, 'Mean: $' + str(round(mean_total_price, 2)), color='b')
+
+    plt.axvline(x=mean_total_price + std_sale_price, color='g', linestyle='-.')
+    plt.text(mean_total_price + std_sale_price + 10, -0.4, 'Std Dev: $' + str(round(std_sale_price, 2)), color='g')
 
     # Show the plot
     plt.show()
